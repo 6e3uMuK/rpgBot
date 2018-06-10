@@ -1,4 +1,4 @@
-﻿<<<<<<< HEAD
+﻿
 ﻿var tmi = require ('tmi.js');
 
 var options = {
