@@ -16,7 +16,7 @@ var CHANNEL = "#marvellous_Mr6e3yMue";
 // Админы
 var admins = new Set();
 admins.add("#marvellous_Mr6e3yMue");
-var players = new Set();
+
 // Сама игра
 var game = {
     players: new Set(),
@@ -130,9 +130,9 @@ function removePlayer(){}
 
 function showPlayers(){
     var message = "";
-    //players.add("6e3ymue", "player");
-    //players.add(1);
-    players.forEach(function (element) {
+    //game.players.add("6e3ymue", "player");
+    //game.players.add(1);
+    game.players.forEach(function (element) {
         message += element + ", ";
     })
     client.action(CHANNEL, (message == "" ? "Игроков пока нет": "Текущие игроки: " + message));
