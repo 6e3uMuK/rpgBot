@@ -1,4 +1,30 @@
-﻿var tmi = require ('tmi.js');
+﻿/*
+
+    Пишем РПГ бота для Ромки
+
+    TODO: Набор игроков
+    TODO: Проведение игры
+    TODO: Боевая система
+
+*/
+
+// Переменные которые будут нужны
+
+// Канал
+var CHANNEL = "#marvellous_Mr6e3yMue";
+
+// Админы
+var admins = new Set();
+admins.add("#marvellous_Mr6e3yMue");
+var players = new Set();
+// Сама игра
+var game = {
+    players: new Set(),
+    condition:{}
+}
+
+// Подключение и опции бота
+var tmi = require ('tmi.js');
 
 var options = {
     options: {
@@ -12,12 +38,14 @@ var options = {
         username: "marvellous_MrCJla6oyMue",
         password: "oauth:fp22g54ajiitdxpqkvwmpb79lrfcif"
     },
-    channels: ["#marvellous_Mr6e3yMue"]
+    channels: [CHANNEL]
 };
 
 var client = new tmi.client(options);
 client.connect();
 
+
+/* //Не знаю нужно ли это но пока уберу
 // User join to chat
 client.on("join", function (channel, username) {
   //  client.action("#marvellous_li", username + " , glad to see you!");
@@ -29,8 +57,8 @@ function timeOut(message) {
     splitMSG = message.split(" ");
     timeoutUserName = splitMSG[1];
     timeoutDuration = splitMSG[2];
-    client.timeout("#marvellous_Mr6e3yMue", timeoutUserName, timeoutDuration);
-    client.action('#marvellous_Mr6e3yMue', timeoutUserName + ' now u have timeout mode! Duration: ' + timeoutDuration);
+    client.timeout(CHANNEL, timeoutUserName, timeoutDuration);
+    client.action(CHANNEL, timeoutUserName + ' now u have timeout mode! Duration: ' + timeoutDuration);
 }
 
 // Split command
@@ -38,7 +66,7 @@ function splitMessage(message) {
     if ((message.indexOf('!to')) !== -1){
         timeOut(message);
     } else if ((message.indexOf('!clear')) !== -1){
-        client.clear("#marvellous_Mr6e3yMue");
+        client.clear(CHANNEL);
     }
 
 }
@@ -53,31 +81,64 @@ client.on('chat', function (channel, username, message) {
         // Users commands
         switch (message) {
             case "!fb":
-                client.action('#marvellous_Mr6e3yMue', 'your-fb-link-here');
+                client.action(CHANNEL, 'your-fb-link-here');
                 break;
             case "!twt":
-                client.action('#marvellous_Mr6e3yMue', 'Гыввауц');
+                client.action(CHANNEL, 'Гыввауц');
                 break;
             default:
         }
     }
-});
+});*/
 
-//Статы
+// Обработка команды
 client.on('chat', function (channel, username, message) {
-
-    switch (message) {
-        case "!статы":
-            client.action('#marvellous_Mr6e3yMue', 'ваши статы равны 0');
-            break;
-        case "!+":
-            client.action('#marvellous_Mr6e3yMue', '+');
-            break;
-        default:
+    if (isAdmin(username.username)) {
+        adminCommands(message);
+    } else {
+        userCommands(message);
     }
 });
 
+function isAdmin(username) {
+    admins.forEach(function (element) {
+        if (username.username === element) return true;});
+    return false;
+}
+//TODO: Добавить команды пользователя и админа и их обработку
+function adminCommands(message){}
+function userCommands(message){
+    switch (message) {
+        case "!игроки":
+            showPlayers();
+            break;
+        case "!статы":
+            client.action(CHANNEL, 'ваши статы равны 0');
+            break;
+        case "!+":
+            client.action(CHANNEL, '+');
+            break;
+        default:
+    }
+}
+//TODO: Функции старт игры, конец, добавление и удаление игроков
+function startGame(){}
+function endGame(){}
 
+function addPlayer(){}
+function removePlayer(){}
+
+function showPlayers(){
+    var message = "";
+    //players.add("6e3ymue", "player");
+    //players.add(1);
+    players.forEach(function (element) {
+        message += element + ", ";
+    })
+    client.action(CHANNEL, (message == "" ? "Игроков пока нет": "Текущие игроки: " + message));
+}
+
+/*
 //Получение класса
 client.on('chat', function (channel, username, message) {
 
@@ -92,18 +153,6 @@ client.on('chat', function (channel, username, message) {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-/*
 //Вывод класса
 client.on('chat', function (channel, username, message) {
     if (message === '!класс') {
