@@ -16,22 +16,3 @@ channels: ["your-channel-here"]
 ```
 `oauthtoken` you can get [here](https://twitchapps.com/tmi/)
 4. Run bot `node app.js`
-
-<<<<<<< HEAD
-## Commands
-### For admin
-- `!to username duration` - Timeout username on channel for X seconds.
-- `!clear` - Clear all messages on a channel.
-
-### For users
-- `!fb` - Send you Facebook link
-- `!twt` - Send you Twitter link
-
-## Community
-
-- Follow [@KucherDev on Twitter](https://twitter.com/KucherDev).
-- Have a questions? [My telgram](https://t.me/qWici).# rpgBot
-=======
-
-
->>>>>>>
