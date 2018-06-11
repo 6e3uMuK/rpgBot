@@ -15,8 +15,9 @@ var CHANNEL = "#marvellous_Mr6e3yMue";
 
 // Админы
 var admins = new Set();
-admins.add("#marvellous_Mr6e3yMue");
 
+//admins.add("marvellous_mr6e3ymue");
+admins.add("my4w");
 // Сама игра
 var game = {
     players: new Set(),
@@ -45,7 +46,8 @@ var client = new tmi.client(options);
 client.connect();
 
 
-/* //Не знаю нужно ли это но пока уберу
+/* 
+ * //Не знаю нужно ли это но пока уберу
 // User join to chat
 client.on("join", function (channel, username) {
   //  client.action("#marvellous_li", username + " , glad to see you!");
@@ -89,31 +91,43 @@ client.on('chat', function (channel, username, message) {
             default:
         }
     }
-});*/
+});
+*/
 
 // Обработка команды
 client.on('chat', function (channel, username, message) {
     if (isAdmin(username.username)) {
         adminCommands(message);
     } else {
-        userCommands(message);
+        userCommands(message, username.username);
     }
 });
 
 function isAdmin(username) {
+    var admin = false;
     admins.forEach(function (element) {
-        if (username.username === element) return true;});
-    return false;
+        if (username == element) admin = true;});
+    return admin;
 }
 //TODO: Добавить команды пользователя и админа и их обработку
-function adminCommands(message){}
-function userCommands(message){
+function adminCommands(message){
+    switch (message) {
+        case "!<3":
+            client.action(CHANNEL, '<3<3<3<3<3<3');
+            break;
+        case "!Ойвсе":
+            client.action(CHANNEL, 'ОЙ ВСЕ');
+            break;
+        default:
+    }
+}
+function userCommands(message, username){
     switch (message) {
         case "!игроки":
             showPlayers();
             break;
-        case "!статы":
-            client.action(CHANNEL, 'ваши статы равны 0');
+        case "!играть":
+            addPlayer(username);
             break;
         case "!+":
             client.action(CHANNEL, '+');
@@ -122,10 +136,12 @@ function userCommands(message){
     }
 }
 //TODO: Функции старт игры, конец, добавление и удаление игроков
-function startGame(){}
+function startGame() {}
 function endGame(){}
 
-function addPlayer(){}
+function addPlayer(username) {
+    game.players.add(username);
+}
 function removePlayer(){}
 
 function showPlayers(){
@@ -137,6 +153,8 @@ function showPlayers(){
     })
     client.action(CHANNEL, (message == "" ? "Игроков пока нет": "Текущие игроки: " + message));
 }
+
+
 
 /*
 //Получение класса
