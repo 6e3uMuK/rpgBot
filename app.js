@@ -17,7 +17,7 @@ var CHANNEL = "#marvellous_Mr6e3yMue";
 var admins = new Set();
 
 //admins.add("marvellous_mr6e3ymue");
-admins.add("my4w");
+//admins.add("my4w");
 // Сама игра
 var game = {
     players: new Set(),
@@ -113,7 +113,7 @@ function isAdmin(username) {
 function adminCommands(message){
     switch (message) {
         case "!<3":
-            client.action(CHANNEL, '<3<3<3<3<3<3');
+            client.action(CHANNEL, '<3 <3 <3 <3 <3 <3');
             break;
         case "!Ойвсе":
             client.action(CHANNEL, 'ОЙ ВСЕ');
@@ -121,6 +121,7 @@ function adminCommands(message){
         default:
     }
 }
+
 function userCommands(message, username){
     switch (message) {
         case "!игроки":
@@ -129,32 +130,69 @@ function userCommands(message, username){
         case "!играть":
             addPlayer(username);
             break;
+        case "!статы":
+            showStats(username);
+            break;
         case "!+":
             client.action(CHANNEL, '+');
             break;
         default:
     }
 }
+
 //TODO: Функции старт игры, конец, добавление и удаление игроков
 function startGame() {}
 function endGame(){}
 
 function addPlayer(username) {
-    game.players.add(username);
+    game.players.add(new Player(username,"mage"));
+    client.action(CHANNEL, '' + username + ' присоединяется к игре! ');
 }
 function removePlayer(){}
 
+function showStats(username) {
+    game.players.forEach(function (element) {
+        if (element.name == username) client.action(CHANNEL, '' + username +
+            ": " + element.stringClass +'\n' + '\tСила: ' +
+            element.stats.str + '\tИнтеллект: ' + element.stats.int + '\n');
+    })
+}
+
 function showPlayers(){
     var message = "";
-    //game.players.add("6e3ymue", "player");
-    //game.players.add(1);
     game.players.forEach(function (element) {
-        message += element + ", ";
+        message += element.name + " ";
     })
     client.action(CHANNEL, (message == "" ? "Игроков пока нет": "Текущие игроки: " + message));
 }
 
 
+
+// Конструктор игрока
+function Player(user, stringClass){
+    this.name = user;
+    this.stringClass = stringClass;
+    this.stats = new Stats(stringClass);
+    this.lvl = 0;
+}
+// Конструктор статов
+function Stats(stringClass){
+
+    this.setStats = function (str, int) {
+        this.int = int;
+        this.str = str;
+    };
+
+    switch (stringClass) {
+        case "rogue":
+            this.setStats(10,0);
+            break;
+        case "mage":
+            this.setStats(0,5);
+            break;
+        default: this.setStats(0,0);
+    }
+}
 
 /*
 //Получение класса
