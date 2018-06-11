@@ -15,8 +15,8 @@ var CHANNEL = "#marvellous_Mr6e3yMue";
 
 // Админы
 var admins = new Set();
-admins.add("#marvellous_Mr6e3yMue");
-
+//admins.add("#marvellous_Mr6e3yMue");
+admins.add("my4w");
 // Сама игра
 var game = {
     players: new Set(),
@@ -101,12 +101,23 @@ client.on('chat', function (channel, username, message) {
 });
 
 function isAdmin(username) {
+    var admin = false;
     admins.forEach(function (element) {
-        if (username.username === element) return true;});
-    return false;
+        if (username == element) admin = true;});
+    return admin;
 }
 //TODO: Добавить команды пользователя и админа и их обработку
-function adminCommands(message){}
+function adminCommands(message){
+    switch (message) {
+        case "!<3":
+            client.action(CHANNEL, '<3<3<3<3<3<3');
+            break;
+        case "!Ойвсе":
+            client.action(CHANNEL, 'ОЙ ВСЕ');
+            break;
+        default:
+    }
+}
 function userCommands(message){
     switch (message) {
         case "!игроки":
