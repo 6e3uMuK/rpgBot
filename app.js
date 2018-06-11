@@ -46,54 +46,6 @@ var client = new tmi.client(options);
 client.connect();
 
 
-/* 
- * //Не знаю нужно ли это но пока уберу
-// User join to chat
-client.on("join", function (channel, username) {
-  //  client.action("#marvellous_li", username + " , glad to see you!");
-  //  process.stdout.write('пришла команда ' + client.on + '\n');
-})
-
-// Timeout function
-function timeOut(message) {
-    splitMSG = message.split(" ");
-    timeoutUserName = splitMSG[1];
-    timeoutDuration = splitMSG[2];
-    client.timeout(CHANNEL, timeoutUserName, timeoutDuration);
-    client.action(CHANNEL, timeoutUserName + ' now u have timeout mode! Duration: ' + timeoutDuration);
-}
-
-// Split command
-function splitMessage(message) {
-    if ((message.indexOf('!to')) !== -1){
-        timeOut(message);
-    } else if ((message.indexOf('!clear')) !== -1){
-        client.clear(CHANNEL);
-    }
-
-}
-
-// Commands
-client.on('chat', function (channel, username, message) {
-
-    if (username.username === "#marvellous_Mr6e3yMue"){
-        // Admin commands
-        splitMessage(message);
-    } else {
-        // Users commands
-        switch (message) {
-            case "!fb":
-                client.action(CHANNEL, 'your-fb-link-here');
-                break;
-            case "!twt":
-                client.action(CHANNEL, 'Гыввауц');
-                break;
-            default:
-        }
-    }
-});
-*/
-
 // Обработка команды
 client.on('chat', function (channel, username, message) {
     if (isAdmin(username.username)) {
@@ -141,21 +93,32 @@ function userCommands(message, username){
 }
 
 //TODO: Функции старт игры, конец, добавление и удаление игроков
-function startGame() {}
+function startGame(username) {
+    client.whisper(username, ' Выберите класс:Рыцарь, Мага, Ворюга');
+    client.on("whisper", function (from, userstate, message, self) {
+        var player = searchPlayer(username);
+        player.stats = new Stats(message);
+        player.stringClass = message;
+    });
+
+}
+
+
 function endGame(){}
 
 function addPlayer(username) {
-    game.players.add(new Player(username,"mage"));
+    game.players.add(new Player(username, startGame(username)));
     client.action(CHANNEL, '' + username + ' присоединяется к игре! ');
 }
 function removePlayer(){}
 
 function showStats(username) {
-    game.players.forEach(function (element) {
-        if (element.name == username) client.action(CHANNEL, '' + username +
-            ": " + element.stringClass +'\n' + '\tСила: ' +
-            element.stats.str + '\tИнтеллект: ' + element.stats.int + '\n');
-    })
+    var element = searchPlayer(username)
+       client.action(CHANNEL, '' + username +
+           ": " + element.stringClass + '\n' + '\tСила: ' +
+           element.stats.str + '\tЛовкость: ' +
+           element.stats.dex + '\tИнтеллект: ' + element.stats.int + '\n');
+    
 }
 
 function showPlayers(){
@@ -178,21 +141,37 @@ function Player(user, stringClass){
 // Конструктор статов
 function Stats(stringClass){
 
-    this.setStats = function (str, int) {
+    this.setStats = function (str, dex, int) {
         this.int = int;
         this.str = str;
+        this.dex = dex;
     };
 
     switch (stringClass) {
-        case "rogue":
-            this.setStats(10,0);
+        case "Рыцарь":
+            this.setStats(8,2,1);
             break;
-        case "mage":
-            this.setStats(0,5);
+        case "Мага":
+            this.setStats(0,3,8);
+            break;
+        case "Ворюга":
+            this.setStats(0, 7, 4);
             break;
         default: this.setStats(0,0);
     }
 }
+
+function searchPlayer(username) {
+    var result = null;
+
+    game.players.forEach(function (element) {
+        if (element.name == username)
+            result = element;
+    })
+    return result;
+}
+
+
 
 /*
 //Получение класса
